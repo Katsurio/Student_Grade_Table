@@ -31,6 +31,7 @@ function addClicked() {
         var course = inputIds.course.val();
         var grade = inputIds.grade.val();
         addStudent(name, course, grade);
+        studentObj = {};
         updateData();
     });
 }
@@ -76,7 +77,8 @@ function calculateAverage() {
         gradesTotal += parseInt(student_array[i].grade);
     }
     var averageGrade = gradesTotal / student_array.length;
-    return $('.avgGrade').text(averageGrade);
+    var number = $('.avgGrade').text(averageGrade);
+    return number;
 }
 /**
  * updateData - centralized function to update the average and call student list update
@@ -90,6 +92,7 @@ function updateData() {
  */
 function updateStudentList() {
     console.log("updateStudentList function called");
+    $('.student-list.table > tbody').empty();
     for(var i = 0; i < student_array.length; i++) {
         addStudentToDom(student_array[i]);
         // $('tbody').append('<tr>');
