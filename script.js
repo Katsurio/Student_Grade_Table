@@ -127,34 +127,33 @@ function removeStudent() {
 }
 
 
-function addIdentifyingNumber() {
-    var identifyingNumber = 1;
-    for (; identifyingNumber < globalStudentDataArray.length; identifyingNumber++) {
-        globalStudentDataArray.push(response.data[0].attr('id', identifyingNumber));
-    }
-}
+// function addIdentifyingNumber() {
+//     var identifyingNumber = 1;
+//     for (; identifyingNumber < globalStudentDataArray.length; identifyingNumber++) {
+//         globalStudentDataArray.push(response.data[0].attr('id', identifyingNumber));
+//     }
+// }
 /**
  * getOverHereData - Event handler that gets data from the database using an AJAX call and pushes it into the globalStudentDataArray
  */
 function getOverHereData() {
-    $('.btn-warning').click(function () {
-        var data_object = {
-            api_key: 'LrLCpNcjb5',
-            name: 'Jef'
-        };
-        console.log('made it to ajax call');
-        $.ajax({
-            data: data_object,
-            dataType: 'json',
-            method: 'post',
-            url: 'https://s-apis.learningfuze.com/sgt/get',
-            success: function (response) {
-                console.log('success of ajax call', response.data);
-                addIdentifyingNumber();
-
-            }
-        })
-    });
+    console.log("getOverHereData function called");
+    var data_object = {
+        api_key: 'LrLCpNcjb5',
+        name: 'Jef'
+    };
+    console.log('made it to ajax call');
+    $.ajax({
+        data: data_object,
+        dataType: 'json',
+        method: 'post',
+        url: 'https://s-apis.learningfuze.com/sgt/get',
+        success: function (response) {
+            console.log('success of ajax call', response.data);
+            // addIdentifyingNumber();
+        }
+    })
+}
 
 // function addShit() {
 //     for(var i=0;i<KevinArray.length; i++) {
@@ -173,7 +172,7 @@ function getOverHereData() {
      * applyClickHandlers - function to be called in the listen that applies all click handlers
      */
     function applyClickHandlers() {
-        getOverHereData();
+        $('#get-over-here').click(getOverHereData);
         addClicked();
         cancelClicked();
         removeStudent();
@@ -187,4 +186,4 @@ function getOverHereData() {
     /**
      * Listen for the document to load and reset the data to the initial state
      */
-    $(document).ready(applyClickHandlers());}
+    $(document).ready(applyClickHandlers());
