@@ -17,26 +17,35 @@ var inputIds;
  * addClicked - Event Handler when user clicks the add button
  */
 function addClicked() {
-    $('.btn-success').click(function () {
-        console.log('addClicked works');
-        var name = inputIds.name.val();
-        var course = inputIds.course.val();
-        var grade = inputIds.grade.val();
+    console.log('addClicked works');
+    var name = inputIds.name.val();
+    var course = inputIds.course.val();
+    var grade = inputIds.grade.val();
+    if (typeof name !== 'string' ||
+        name === "" ||
+        typeof course !== 'string' ||
+        course === "" ||
+        isNaN(grade) ||
+        grade === "") {
+        console.log("Please enter a valid name, course, and/or grade");
+        updateData();
+    }
+    else {
         addStudent(name, course, grade);
         studentObj = {};
         clearAddStudentForm();
         updateData();
-    });
+    }
 }
+
 /**
  * cancelClicked - Event Handler when user clicks the cancel button, should clear out student form
  */
 function cancelClicked() {
-    $('.btn-default').click(function () {
-        console.log('cancelClicked works');
-        clearAddStudentForm();
-    });
+    console.log('cancelClicked works');
+    clearAddStudentForm();
 }
+
 /**
  * addStudent - creates a student objects based on input fields in the form and adds the object to global student array
  *
@@ -65,13 +74,20 @@ function clearAddStudentForm() {
  */
 function calculateAverage() {
     console.log('calculateAverage function called');
+    var number;
     var gradesTotal = 0;
-    for (var i = 0; i < student_array.length; i++) {
-        gradesTotal += parseInt(student_array[i].grade);
+    var averageGrade;
+    if (student_array.length < 1) {
+        number = $('.avgGrade').text("0");
+        return number;
+    } else {
+        for (var i = 0; i < student_array.length; i++) {
+            gradesTotal += parseInt(student_array[i].grade);
+        }
+        averageGrade = Math.round(gradesTotal / student_array.length);
+        number = $('.avgGrade').text(averageGrade);
+        return number;
     }
-    var averageGrade = Math.round(gradesTotal / student_array.length);
-    var number = $('.avgGrade').text(averageGrade);
-    return number;
 }
 /**
  * updateData - centralized function to update the average and call student list update
@@ -88,8 +104,9 @@ function updateStudentList() {
     $('.student-list.table > tbody').empty();
     var globalData = 1; //set globalData var equal to the id of the object at index 0 of globalStudentDataArray
     for (var i = 0; i < student_array.length; globalData++, i++) {
-        addStudentToDom(globalStudentDataArray[i], i);
-        addStudentToDom(student_array[i], i + globalStudentDataArray.length);
+        // addStudentToDom(globalStudentDataArray[i], globalData);
+        addStudentToDom(student_array[i]);
+        // i + globalStudentDataArray.length
     }
 }
 /**
@@ -103,7 +120,7 @@ function addStudentToDom(studentObj, number) {                               //f
     $('tbody tr:last').append($('<td>' + studentObj.name + '</td>'));       //creates and appends name to table data
     $('tbody tr:last').append($('<td>' + studentObj.course + '</td>'));     //creates and appends course to table data
     $('tbody tr:last').append($('<td>' + studentObj.grade + '</td>'));      //creates and appends grade to table data
-    $('tbody tr:last').append($('<button>').addClass('btn btn-danger button-index' + number).text('Delete')); //creates and appends grade to table data
+    $('tbody tr:last').append($('<button>').addClass('btn btn-danger button-index' + number).attr('id', 'deleteButton').text('Delete')); //creates and appends grade to table data
 }
 /**
  * reset - resets the application to initial state. Global variables reset, DOM get reset to initial load state
@@ -119,12 +136,21 @@ function reset() {
  * removeStudent - Event handler that removes the deleted student's object from the DOM and from the student_array
  */
 function removeStudent() {
-    $('tbody').on('click', '.btn-danger', function () {
-        var indexPosition = $(this).closest('tr').index();
-        $(this).closest('tr').remove();
+    var indexPosition = $(this).closest('tr').index();
+    $(this).closest('tr').remove();
+    updateData();
+    if (student_array.length === 0) {
+        console.log("removeStudent if call");
+        student_array = [''];
+        updateData();
+    }
+    else {
+        console.log("removeStudent else call");
         student_array.splice(indexPosition, 1);
-    })
+        updateData();
+    }
 }
+
 
 
 // function addIdentifyingNumber() {
@@ -149,10 +175,58 @@ function getOverHereData() {
         method: 'post',
         url: 'https://s-apis.learningfuze.com/sgt/get',
         success: function (response) {
+            debugger;
             console.log('success of ajax call', response.data);
-            // addIdentifyingNumber();
+            student_array = student_array.concat(response.data);
+            updateData();
         }
-    })
+
+
+
+
+
+
+
+
+
+
+        //
+        //     for (var i = 0; i < response.data.length; i++) {
+        //         var incrementorJ = i + "1";
+        //         for(key in response.data[i])
+        //         student_array.push(response.data[att('id',incrementorJ)]);
+        //     }
+        // }
+
+
+
+
+
+
+
+
+            // for (var i in response.data) {
+                // student_array.push([i,response.data[i]]);
+            // }
+
+
+
+            // for (var i = 0; i < response.data.length; i++) {
+            //     console.log("for loop ", response.data[i]);
+            //     for(var key in response.data) {
+            //         console.log("for/in loop ", response.data[i]);
+            //         student_array[i].push(response.data[i][key]);
+            //         if (response.data.hasOwnProperty(key)) {
+            //             console.log("for/in loop/ IF ", response.data[i]);
+            //             // student_array.push(response.data[key]);
+            //         }
+            //     }
+            // }
+                // student_array.push(response.data);
+                // console.log(student_array);
+            // addIdentifyingNumber();
+    //     }
+    });
 }
 
 // function addShit() {
@@ -168,22 +242,23 @@ function getOverHereData() {
 //
 //
 // NewKevinArray[0].data[0].course
-    /**
-     * applyClickHandlers - function to be called in the listen that applies all click handlers
-     */
-    function applyClickHandlers() {
-        $('#get-over-here').click(getOverHereData);
-        addClicked();
-        cancelClicked();
-        removeStudent();
-        inputIds = {
-            name: $("#studentName"),
-            course: $("#course"),
-            grade: $("#studentGrade")
-        };
-    }
+/**
+* applyClickHandlers - function to be called in the listen that applies all click handlers
+*/
+function applyClickHandlers() {
+    getOverHereData();
+    $('#get-over-here').click(getOverHereData);
+    $('#addButton').click(addClicked);
+    $('#cancelButton').click(cancelClicked);
+    $('tbody').on('click', '#deleteButton', removeStudent);
+    inputIds = {
+        name: $("#studentName"),
+        course: $("#course"),
+        grade: $("#studentGrade")
+    };
+}
 
-    /**
-     * Listen for the document to load and reset the data to the initial state
-     */
-    $(document).ready(applyClickHandlers());
+/**
+* Listen for the document to load and reset the data to the initial state
+*/
+$(document).ready(applyClickHandlers);
