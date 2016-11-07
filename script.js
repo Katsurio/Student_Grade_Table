@@ -158,35 +158,37 @@ function reset() {
  * removeStudent - Event handler that removes the deleted student's object from the DOM and from the student_array
  */
 function removeStudent() {
+    var deleteId = $(this).attr('id');
     var indexPosition = $(this).closest('tr').index();
     $(this).closest('tr').remove();
-    updateData();
-    if (student_array.length === 0) {
-        console.log("removeStudent if call");
-        student_array = [''];
-        updateData();
-    }
-    else {
-        console.log("removeStudent else call");
-        student_array.splice(indexPosition, 1);
-        updateData();
-    }
-    // var send_data_object = {
-    //     api_key: 'LrLCpNcjb5',
-    //     student_id: studentObj.id
-    // };
-    // console.log('made it to ajax call');
-    // $.ajax({
-    //     data: send_data_object,
-    //     dataType: 'json',
-    //     method: 'post',
-    //     url: 'https://s-apis.learningfuze.com/sgt/create',
-    //     success: function (response) {
-    //         debugger;
-    //         console.log('success of CREATE DATA ajax call');
-    //         updateData();
-    //     }
-    // });
+    // updateData();
+    // if (student_array.length === 0) {
+    //     console.log("removeStudent if call");
+    //     student_array = [''];
+    //     // updateData();
+    // }
+    // else {
+    //     console.log("removeStudent else call");
+    //     student_array.splice(indexPosition, 1);
+    //     // updateData();
+    // }
+    var send_data_object = {
+        api_key: 'LrLCpNcjb5',
+        student_id: deleteId
+    };
+    console.log('made it to ajax call');
+    $.ajax({
+        data: send_data_object,
+        dataType: 'json',
+        method: 'post',
+        url: 'https://s-apis.learningfuze.com/sgt/delete',
+        success: function (response) {
+            debugger;
+            console.log('success of delete ajax call');
+            student_array.splice(indexPosition, 1);
+            // updateData();
+        }
+    });
 }
 
 // function addIdentifyingNumber() {
@@ -213,7 +215,7 @@ function getOverHereData() {
             debugger;
             console.log('success of GET DATA ajax call');
             student_array = student_array.concat(response.data);
-            updateData();
+            // updateData();
         }
     });
 }
