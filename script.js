@@ -62,6 +62,10 @@ function addStudent(theName, theCourse, theGrade) {
             studentObj.id = response.new_id;
             student_array.push(studentObj);
             updateData();
+        },
+        error: function (response) {
+            console.log("Error, please try again.");
+            reset();
         }
     });
 }
@@ -128,12 +132,13 @@ function addStudentToDom(studentObj, idNumber) {                               /
  * reset - resets the application to initial state. Global variables reset, DOM get reset to initial load state
  */
 //TODO DO I EVEN NEED THIS ANYMORE???
-// function reset() {
-//     student_array = [];
-//     clearAddStudentForm();
-//     $('tbody').empty();
-//     $('.avgGrade').text(0);
-// }
+function reset() {
+    student_array = [];
+    clearAddStudentForm();
+    $('tbody').empty();
+    $('.avgGrade').text(0);
+    getOverHereData();
+}
 /**
  * removeStudent - Event handler that removes the deleted student's object from the DOM and from the student_array
  */
@@ -152,6 +157,10 @@ function removeStudent() {
         success: function (response) {
             student_array.splice(indexPosition, 1);
             updateData();
+        },
+        error: function (response) {
+            console.log("Error, please try again.");
+            reset();
         }
     });
 }
@@ -170,6 +179,10 @@ function getOverHereData() {
         success: function (response) {
             student_array = student_array.concat(response.data);
             updateData();
+        },
+        error: function (response) {
+            console.log("Error, please try again.");
+            reset();
         }
     });
 }
