@@ -32,7 +32,7 @@ function addClicked() {
     }
     else {
         addStudent(name, course, grade);
-        studentObj = {};
+        //studentObj = {};
         clearAddStudentForm();
         updateData();
     }
@@ -57,9 +57,7 @@ function addStudent(theName, theCourse, theGrade) {
         name: theName,
         course: theCourse,
         grade: theGrade
-        // id: student_array.length
     };
-    student_array.push(studentObj);
 
     var send_data_object = {
         api_key: 'LrLCpNcjb5',
@@ -75,7 +73,9 @@ function addStudent(theName, theCourse, theGrade) {
         url: 'https://s-apis.learningfuze.com/sgt/create',
         success: function (response) {
             debugger;
-            console.log('success of CREATE DATA ajax call');
+            studentObj.id = response.new_id;
+            student_array.push(studentObj);
+            console.log('success of CREATE DATA ajax call', response);
             updateData();
         }
     });
@@ -136,7 +136,7 @@ function updateStudentList() {
  * @param idNumber
  */
 function addStudentToDom(studentObj, idNumber) {                               //function that adds student to DOM with 2 params: studentObj and number
-    $('tbody').append('<tr>').data('id', idNumber);                                              //creates and appends rows to table body
+    $('tbody').append('<tr>');                                              //creates and appends rows to table body
     $('tbody tr:last').append($('<td>' + studentObj.name + '</td>'));       //creates and appends name to table data
     $('tbody tr:last').append($('<td>' + studentObj.course + '</td>'));     //creates and appends course to table data
     $('tbody tr:last').append($('<td>' + studentObj.grade + '</td>'));      //creates and appends grade to table data
@@ -161,7 +161,7 @@ function removeStudent() {
     var deleteId = $(this).attr('id');
     var indexPosition = $(this).closest('tr').index();
     $(this).closest('tr').remove();
-    // updateData();
+    updateData();
     // if (student_array.length === 0) {
     //     console.log("removeStudent if call");
     //     student_array = [''];
@@ -174,7 +174,7 @@ function removeStudent() {
     // }
     var send_data_object = {
         api_key: 'LrLCpNcjb5',
-        student_id: deleteId
+        student_id: student_array[indexPosition].id
     };
     console.log('made it to ajax call');
     $.ajax({
@@ -184,9 +184,11 @@ function removeStudent() {
         url: 'https://s-apis.learningfuze.com/sgt/delete',
         success: function (response) {
             debugger;
+            console.log("remove function response data: ", response);
             console.log('success of delete ajax call');
             student_array.splice(indexPosition, 1);
-            // updateData();
+            debugger;
+            updateData();
         }
     });
 }
@@ -215,7 +217,7 @@ function getOverHereData() {
             debugger;
             console.log('success of GET DATA ajax call');
             student_array = student_array.concat(response.data);
-            // updateData();
+            updateData();
         }
     });
 }
