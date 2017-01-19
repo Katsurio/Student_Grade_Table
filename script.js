@@ -175,7 +175,7 @@ function getOverHereData() {
         data: data_object,
         dataType: 'json',
         method: 'post',
-        url: 'https://s-apis.learningfuze.com/sgt/get',
+        url: 'http://localhost:8888/lfz/SGT/read.php',
         success: function (response) {
             student_array = student_array.concat(response.data);
             updateData();
