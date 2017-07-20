@@ -2,13 +2,13 @@ Student Grade Table (SGT)
 ===============
 
 ### Summary
-A CMS(Content Management System) application designed to save and display student grades while 
+>A CMS(Content Management System) application designed to save and display student grades while 
 adhering to minimalist design principles. The earliest versions of the app used JavaScript, 
 jQuery, and AJAX calls to an external database's server for its CRUD functionality. 
 Most recent versions utilizes a LAMP(Linux, Apache, MySQL, PHP) stack to manipulate data, 
 but currently in the process of refactoring SGT in the front-end JavaScript framework, AngularJS.
 
-**[Live link](http://www.FisherCode.com/apps/student_grade_table)**
+**[Live Link](http://www.FisherCode.com/apps/student_grade_table)**
   
 ### Key Technologies
 - **CSS3**
